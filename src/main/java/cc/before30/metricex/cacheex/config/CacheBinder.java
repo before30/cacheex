@@ -14,17 +14,17 @@ import javax.annotation.PostConstruct;
  * @author before30
  * @since 2020/07/17
  */
-@Component
+//@Component
 @RequiredArgsConstructor
 public class CacheBinder {
 
-    private final CacheManager cacheManager;
-    private final CacheMetricsRegistrar cacheMetricsRegistrar;
-
-    @PostConstruct
-    public void init() {
-        if (cacheManager instanceof CustomCacheManager) {
-            ((CustomCacheManager)cacheManager).setCacheMetricsRegistrar(cacheMetricsRegistrar);
-        }
-    }
+//    private final CacheManager cacheManager;
+//    private final CacheMetricsRegistrar cacheMetricsRegistrar;
+//
+//    @PostConstruct
+//    public void init() {
+//        if (cacheManager instanceof CustomCacheManager) {
+//            ((CustomCacheManager)cacheManager).setCacheMetricsRegistrar(cacheMetricsRegistrar);
+//        }
+//    }
 }
