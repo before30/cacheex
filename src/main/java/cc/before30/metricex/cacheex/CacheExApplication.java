@@ -7,10 +7,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 @EnableConfigurationProperties(CustomCacheProperties.class)
 @SpringBootApplication
-public class CacheexApplication {
+public class CacheExApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(CacheexApplication.class, args);
+        SpringApplication.run(CacheExApplication.class, args);
     }
 
 }

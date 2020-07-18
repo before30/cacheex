@@ -38,4 +38,8 @@ public class HelloController {
         return helloService.put2(id);
     }
 
+    @GetMapping("/put3/{id}")
+    public String put3Id(@PathVariable Long id) {
+        return helloService.put3(id);
+    }
 }

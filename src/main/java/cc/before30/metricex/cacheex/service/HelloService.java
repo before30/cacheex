@@ -39,4 +39,9 @@ public class HelloService {
     public String put2(Long id) {
         return String.valueOf(id);
     }
+
+    @Cacheable(cacheManager = "circuitCacheManager", value = "circuit_cache", key = "#id")
+    public String put3(Long id) {
+        return String.valueOf(id);
+    }
 }

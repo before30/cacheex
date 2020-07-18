@@ -1,7 +1,5 @@
 package cc.before30.metricex.cacheex.config.cache.metrics;
 
-import cc.before30.metricex.cacheex.config.cache.metrics.CacheStats;
-import cc.before30.metricex.cacheex.config.cache.metrics.CacheStatsCounter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;

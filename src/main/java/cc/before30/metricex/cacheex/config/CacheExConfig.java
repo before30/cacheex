@@ -7,6 +7,7 @@ import io.github.resilience4j.micrometer.tagged.TaggedCircuitBreakerMetrics;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import redis.embedded.RedisServer;
 
 import javax.annotation.PostConstruct;
@@ -18,6 +19,7 @@ import javax.annotation.PreDestroy;
  * @author before30
  * @since 2020/07/16
  */
+@Profile("localhost")
 @Configuration
 public class CacheExConfig {
 

@@ -36,8 +36,8 @@ dependencies {
         exclude group: 'org.slf4j', module: 'slf4j-simple'
     }
 
-    compile "io.github.resilience4j:resilience4j-all:1.1.0"
-    compile "io.github.resilience4j:resilience4j-micrometer:1.1.0"
+    compile "io.github.resilience4j:resilience4j-all:1.5.0"
+    compile "io.github.resilience4j:resilience4j-micrometer:1.5.0"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
 }
