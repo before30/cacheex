@@ -9,9 +9,13 @@ import java.util.concurrent.atomic.LongAdder;
  * @since 2020/07/17
  */
 public class CacheStatsCounter {
+
     private final LongAdder hitCount;
+
     private final LongAdder missCount;
+
     private final LongAdder putCount;
+
     private final LongAdder evictionCount;
 
     public CacheStatsCounter() {

@@ -1,6 +1,7 @@
 package cc.before30.metricex.cacheex.config.cache.metrics;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.Immutable;
 
 /**
@@ -10,6 +11,7 @@ import org.springframework.data.annotation.Immutable;
  * @since 2020/07/17
  */
 @Immutable
+@RequiredArgsConstructor
 public class CacheStats {
     private static final CacheStats EMPTY_STATS = new CacheStats(0, 0, 0, 0);
 
@@ -21,17 +23,6 @@ public class CacheStats {
     private final long putCount;
     @Getter
     private final long evictionCount;
-
-
-    public CacheStats(long hitCount,
-                      long missCount,
-                      long putCount,
-                      long evictionCount) {
-        this.hitCount = hitCount;
-        this.missCount = missCount;
-        this.putCount = putCount;
-        this.evictionCount = evictionCount;
-    }
 
     public static CacheStats empty() {
         return EMPTY_STATS;
