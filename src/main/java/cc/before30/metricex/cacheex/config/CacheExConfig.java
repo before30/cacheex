@@ -23,24 +23,6 @@ public class CacheExConfig {
 
     private RedisServer redisServer;
 
-    @Bean
-    public CircuitBreakerRegistry circuitBreakerRegistry(MeterRegistry registry) {
-        CircuitBreakerConfig defaultConfig = CircuitBreakerConfig
-                .ofDefaults();
-
-        CircuitBreakerRegistry circuit = CircuitBreakerRegistry.of(defaultConfig);
-
-        TaggedCircuitBreakerMetrics
-                .ofCircuitBreakerRegistry(circuit)
-                .bindTo(registry);
-        return circuit;
-    }
-
-    @Bean
-    public CircuitBreaker circuitBreaker(CircuitBreakerRegistry registry) {
-        return registry.circuitBreaker("redis-circuit-breaker");
-    }
-
     @PostConstruct
     public void redisServer() {
         redisServer = new RedisServer(6379);

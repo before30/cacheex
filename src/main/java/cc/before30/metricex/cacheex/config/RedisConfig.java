@@ -1,6 +1,7 @@
 package cc.before30.metricex.cacheex.config;
 
-import cc.before30.metricex.cacheex.config.resilience4j.Resilience4jCacheManager;
+import cc.before30.metricex.cacheex.config.cache.CustomCacheManager;
+import cc.before30.metricex.cacheex.config.cache.metrics.CustomCacheMeterBinderProvider;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +30,6 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class RedisConfig extends CachingConfigurerSupport {
 
-    private final CircuitBreaker circuitBreaker;
-    private final MeterRegistry meterRegistry;
-
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         return new LettuceConnectionFactory("localhost", 6379);
@@ -49,7 +47,11 @@ public class RedisConfig extends CachingConfigurerSupport {
                 .cacheDefaults(defaultConfig)
                 .build();
 
-        return new Resilience4jCacheManager(redisCacheManager, circuitBreaker, meterRegistry);
+        return new CustomCacheManager(redisCacheManager);
     }
 
+    @Bean
+    public CustomCacheMeterBinderProvider customCacheMeterBinderProvider() {
+        return new CustomCacheMeterBinderProvider();
+    }
 }
