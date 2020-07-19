@@ -28,10 +28,14 @@ public class CacheExCircuitBreakerConfig {
     @Bean
     public CircuitBreakerRegistry circuitBreakerRegistry(MeterRegistry registry) {
         CircuitBreakerConfig defaultConfig = CircuitBreakerConfig.custom()
+                .failureRateThreshold(10)
+                .slowCallRateThreshold(50)
+                .slowCallDurationThreshold(Duration.ofMillis(200))
+                .permittedNumberOfCallsInHalfOpenState(5)
                 .slidingWindowSize(100)
                 .minimumNumberOfCalls(10)
-                .permittedNumberOfCallsInHalfOpenState(5)
-                .waitDurationInOpenState(Duration.ofSeconds(5))
+                .automaticTransitionFromOpenToHalfOpenEnabled(true)
+                .waitDurationInOpenState(Duration.ofSeconds(10))
                 .build();
 
         CircuitBreakerRegistry circuitBreakerRegistry = CircuitBreakerRegistry.of(defaultConfig);

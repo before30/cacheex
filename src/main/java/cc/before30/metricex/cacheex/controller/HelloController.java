@@ -42,4 +42,10 @@ public class HelloController {
     public String put3Id(@PathVariable Long id) {
         return helloService.put3(id);
     }
+
+    @GetMapping("/delete3/{id}")
+    public String delete3Id(@PathVariable Long id) {
+        return helloService.delete3(id);
+    }
+
 }

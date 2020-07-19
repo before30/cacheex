@@ -44,9 +44,13 @@ public class CircuitCacheWrapper extends CustomCacheWrapper {
         Supplier<ValueWrapper> supplier = Decorators
                 .ofSupplier(() -> delegate.get(key))
                 .withCircuitBreaker(circuitBreaker)
-                .withFallback((ex) -> null)
                 .decorate();
+
         ValueWrapper result = Try.ofSupplier(supplier)
+                .recover((ex) -> {
+                    log.error("recover. {} {}",ex, ex.getMessage());
+                    return null;
+                })
                 .get();
         afterGet(result);
 
@@ -58,10 +62,10 @@ public class CircuitCacheWrapper extends CustomCacheWrapper {
         Supplier<T> supplier = Decorators
                 .ofSupplier(() -> delegate.get(key, type))
                 .withCircuitBreaker(circuitBreaker)
-                .withFallback((ex) -> null)
                 .decorate();
 
         T result = Try.ofSupplier(supplier)
+                .recover(ex -> null)
                 .get();
         afterGet(result);
 
@@ -73,10 +77,10 @@ public class CircuitCacheWrapper extends CustomCacheWrapper {
         Supplier<T> supplier = Decorators
                 .ofSupplier(() -> delegate.get(key, valueLoader))
                 .withCircuitBreaker(circuitBreaker)
-                .withFallback((ex) -> null)
                 .decorate();
 
         T result = Try.ofSupplier(supplier)
+                .recover(ex -> null)
                 .get();
         afterGet(result);
 
@@ -91,7 +95,7 @@ public class CircuitCacheWrapper extends CustomCacheWrapper {
 
         Try.runRunnable(decorate)
                 .recover((ex) -> {
-                    log.error("error... {}", ex.getMessage());
+                    log.error("error... {} {}", ex, ex.getMessage());
                     return null;
                 })
                 .get();
@@ -102,10 +106,10 @@ public class CircuitCacheWrapper extends CustomCacheWrapper {
     public ValueWrapper putIfAbsent(Object key, Object value) {
         Supplier<ValueWrapper> supplier = Decorators.ofSupplier(() -> delegate.putIfAbsent(key, value))
                 .withCircuitBreaker(circuitBreaker)
-                .withFallback((ex) -> null)
                 .decorate();
 
         ValueWrapper result = Try.ofSupplier(supplier)
+                .recover(ex -> null)
                 .get();
         afterPut();
 
@@ -117,8 +121,14 @@ public class CircuitCacheWrapper extends CustomCacheWrapper {
         Runnable decorate = Decorators.ofRunnable(() -> delegate.evict(key))
                 .withCircuitBreaker(circuitBreaker)
                 .decorate();
+
         Try.runRunnable(decorate)
+                .recover((ex) -> {
+                    log.error("evict failed. {}", ex.getMessage());
+                    return null;
+                })
                 .get();
+
         afterEvict();
     }
 
@@ -127,13 +137,10 @@ public class CircuitCacheWrapper extends CustomCacheWrapper {
         Runnable decorate = Decorators.ofRunnable(() -> delegate.clear())
                 .withCircuitBreaker(circuitBreaker)
                 .decorate();
-        Try.runRunnable(decorate)
-                .get();
-    }
 
-    private Object fallback(Throwable throwable) {
-        log.error("REDIS is not working. fallback return.");
-        return null;
+        Try.runRunnable(decorate)
+                .recover(ex -> null)
+                .get();
     }
 
     public CacheStats stats() {
