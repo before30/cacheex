@@ -1,12 +1,11 @@
 package cc.before30.metricex.cacheex.config;
 
-import io.github.resilience4j.bulkhead.ThreadPoolBulkhead;
-import io.github.resilience4j.bulkhead.ThreadPoolBulkheadConfig;
-import io.github.resilience4j.bulkhead.ThreadPoolBulkheadRegistry;
+import io.github.resilience4j.bulkhead.BulkheadConfig;
+import io.github.resilience4j.bulkhead.BulkheadRegistry;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
+import io.github.resilience4j.micrometer.tagged.TaggedBulkheadMetrics;
 import io.github.resilience4j.micrometer.tagged.TaggedCircuitBreakerMetrics;
-import io.github.resilience4j.micrometer.tagged.TaggedThreadPoolBulkheadMetrics;
 import io.github.resilience4j.micrometer.tagged.TaggedTimeLimiterMetrics;
 import io.github.resilience4j.timelimiter.TimeLimiterConfig;
 import io.github.resilience4j.timelimiter.TimeLimiterRegistry;
@@ -62,14 +61,16 @@ public class CacheExCircuitBreakerConfig {
     }
 
     @Bean
-    public ThreadPoolBulkheadRegistry threadPoolBulkheadRegistry(MeterRegistry registry) {
-        ThreadPoolBulkheadConfig defaultConfig = ThreadPoolBulkheadConfig.ofDefaults();
+    public BulkheadRegistry bulkheadRegistry(MeterRegistry registry) {
+        BulkheadConfig defaultConfig = BulkheadConfig.custom()
+                .maxConcurrentCalls(100)
+                .build();
 
-        ThreadPoolBulkheadRegistry threadPoolBulkheadRegistry = ThreadPoolBulkheadRegistry.of(defaultConfig);
-        TaggedThreadPoolBulkheadMetrics
-                .ofThreadPoolBulkheadRegistry(threadPoolBulkheadRegistry)
+        BulkheadRegistry bulkheadRegistry = BulkheadRegistry.of(defaultConfig);
+        TaggedBulkheadMetrics
+                .ofBulkheadRegistry(bulkheadRegistry)
                 .bindTo(registry);
 
-        return threadPoolBulkheadRegistry;
+        return bulkheadRegistry;
     }
 }

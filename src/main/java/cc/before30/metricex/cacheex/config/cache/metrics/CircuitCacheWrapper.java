@@ -1,5 +1,6 @@
 package cc.before30.metricex.cacheex.config.cache.metrics;
 
+import io.github.resilience4j.bulkhead.Bulkhead;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.decorators.Decorators;
 import io.vavr.control.Try;
@@ -21,12 +22,14 @@ public class CircuitCacheWrapper extends CustomCacheWrapper {
 
     private final Cache delegate;
     private final CircuitBreaker circuitBreaker;
+    private final Bulkhead bulkhead;
     private final CacheStatsCounter cacheStatsCounter = new CacheStatsCounter();
 
-    public CircuitCacheWrapper(Cache delegate, CircuitBreaker circuitBreaker) {
+    public CircuitCacheWrapper(Cache delegate, CircuitBreaker circuitBreaker, Bulkhead bulkhead) {
         super(delegate);
         this.delegate = delegate;
         this.circuitBreaker = circuitBreaker;
+        this.bulkhead = bulkhead;
     }
 
     @Override
@@ -44,6 +47,7 @@ public class CircuitCacheWrapper extends CustomCacheWrapper {
         Supplier<ValueWrapper> supplier = Decorators
                 .ofSupplier(() -> delegate.get(key))
                 .withCircuitBreaker(circuitBreaker)
+                .withBulkhead(bulkhead)
                 .decorate();
 
         ValueWrapper result = Try.ofSupplier(supplier)
@@ -62,6 +66,7 @@ public class CircuitCacheWrapper extends CustomCacheWrapper {
         Supplier<T> supplier = Decorators
                 .ofSupplier(() -> delegate.get(key, type))
                 .withCircuitBreaker(circuitBreaker)
+                .withBulkhead(bulkhead)
                 .decorate();
 
         T result = Try.ofSupplier(supplier)
@@ -77,6 +82,7 @@ public class CircuitCacheWrapper extends CustomCacheWrapper {
         Supplier<T> supplier = Decorators
                 .ofSupplier(() -> delegate.get(key, valueLoader))
                 .withCircuitBreaker(circuitBreaker)
+                .withBulkhead(bulkhead)
                 .decorate();
 
         T result = Try.ofSupplier(supplier)
@@ -91,6 +97,7 @@ public class CircuitCacheWrapper extends CustomCacheWrapper {
     public void put(Object key, Object value) {
         Runnable decorate = Decorators.ofRunnable(() -> delegate.put(key, value))
                 .withCircuitBreaker(circuitBreaker)
+                .withBulkhead(bulkhead)
                 .decorate();
 
         Try.runRunnable(decorate)
@@ -106,6 +113,7 @@ public class CircuitCacheWrapper extends CustomCacheWrapper {
     public ValueWrapper putIfAbsent(Object key, Object value) {
         Supplier<ValueWrapper> supplier = Decorators.ofSupplier(() -> delegate.putIfAbsent(key, value))
                 .withCircuitBreaker(circuitBreaker)
+                .withBulkhead(bulkhead)
                 .decorate();
 
         ValueWrapper result = Try.ofSupplier(supplier)
@@ -120,6 +128,7 @@ public class CircuitCacheWrapper extends CustomCacheWrapper {
     public void evict(Object key) {
         Runnable decorate = Decorators.ofRunnable(() -> delegate.evict(key))
                 .withCircuitBreaker(circuitBreaker)
+                .withBulkhead(bulkhead)
                 .decorate();
 
         Try.runRunnable(decorate)
@@ -136,6 +145,7 @@ public class CircuitCacheWrapper extends CustomCacheWrapper {
     public void clear() {
         Runnable decorate = Decorators.ofRunnable(() -> delegate.clear())
                 .withCircuitBreaker(circuitBreaker)
+                .withBulkhead(bulkhead)
                 .decorate();
 
         Try.runRunnable(decorate)

@@ -4,7 +4,8 @@ import cc.before30.metricex.cacheex.config.cache.CircuitCacheManager;
 import cc.before30.metricex.cacheex.config.cache.CustomCacheManager;
 import cc.before30.metricex.cacheex.config.cache.CustomCacheProperties;
 import cc.before30.metricex.cacheex.config.cache.metrics.CustomCacheMeterBinderProvider;
-import io.github.resilience4j.bulkhead.ThreadPoolBulkheadRegistry;
+import io.github.resilience4j.bulkhead.Bulkhead;
+import io.github.resilience4j.bulkhead.BulkheadRegistry;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import io.github.resilience4j.timelimiter.TimeLimiterRegistry;
@@ -40,7 +41,7 @@ public class RedisConfig extends CachingConfigurerSupport {
     private final CustomCacheProperties cacheProperties;
     private final CircuitBreakerRegistry circuitBreakerRegistry;
     private final TimeLimiterRegistry timeLimiterRegistry;
-    private final ThreadPoolBulkheadRegistry threadPoolBulkheadRegistry;
+    private final BulkheadRegistry bulkheadRegistry;
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
@@ -81,8 +82,9 @@ public class RedisConfig extends CachingConfigurerSupport {
                 .build();
 
         CircuitBreaker circuitBreaker = circuitBreakerRegistry.circuitBreaker("cache-circuit");
+        Bulkhead bulkhead = bulkheadRegistry.bulkhead("cache-bulkhead");
 
-        CircuitCacheManager circuitCacheManager = new CircuitCacheManager(redisCacheManager, circuitBreaker);
+        CircuitCacheManager circuitCacheManager = new CircuitCacheManager(redisCacheManager, circuitBreaker, bulkhead);
         circuitCacheManager.getCache("circuit_cache");
         return circuitCacheManager;
     }
