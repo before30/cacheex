@@ -1,6 +1,6 @@
 package cc.before30.metricex.cacheex.config.cache;
 
-import cc.before30.metricex.cacheex.config.cache.metrics.CircuitCacheWrapper;
+import cc.before30.metricex.cacheex.core.cache.CircuitCustomCacheWrapper;
 import io.github.resilience4j.bulkhead.Bulkhead;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class CircuitCacheManager implements CacheManager {
     public Cache getCache(String name) {
         return cacheMap.computeIfAbsent(
                 name, key -> {
-                    CircuitCacheWrapper cacheWrapper = new CircuitCacheWrapper(delegate.getCache(key), circuitBreaker, bulkhead);
+                    CircuitCustomCacheWrapper cacheWrapper = new CircuitCustomCacheWrapper(delegate.getCache(key), circuitBreaker, bulkhead);
                     return cacheWrapper;
                 });
     }

@@ -3,7 +3,7 @@ package cc.before30.metricex.cacheex.config;
 import cc.before30.metricex.cacheex.config.cache.CircuitCacheManager;
 import cc.before30.metricex.cacheex.config.cache.CustomCacheManager;
 import cc.before30.metricex.cacheex.config.cache.CustomCacheProperties;
-import cc.before30.metricex.cacheex.config.cache.metrics.CustomCacheMeterBinderProvider;
+import cc.before30.metricex.cacheex.core.cache.metrics.CustomCacheMetricsBinderProvider;
 import io.github.resilience4j.bulkhead.Bulkhead;
 import io.github.resilience4j.bulkhead.BulkheadRegistry;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
@@ -90,7 +90,7 @@ public class RedisConfig extends CachingConfigurerSupport {
     }
 
     @Bean
-    public CustomCacheMeterBinderProvider customCacheMeterBinderProvider() {
-        return new CustomCacheMeterBinderProvider();
+    public CustomCacheMetricsBinderProvider customCacheMetricsBinderProvider() {
+        return new CustomCacheMetricsBinderProvider();
     }
 }

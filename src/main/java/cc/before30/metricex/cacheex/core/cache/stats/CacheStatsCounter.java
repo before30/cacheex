@@ -1,4 +1,4 @@
-package cc.before30.metricex.cacheex.config.cache.metrics;
+package cc.before30.metricex.cacheex.core.cache.stats;
 
 import java.util.concurrent.atomic.LongAdder;
 

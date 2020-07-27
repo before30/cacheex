@@ -1,6 +1,6 @@
 package cc.before30.metricex.cacheex.config.cache;
 
-import cc.before30.metricex.cacheex.config.cache.metrics.CustomCacheWrapper;
+import cc.before30.metricex.cacheex.core.cache.CustomCacheWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
