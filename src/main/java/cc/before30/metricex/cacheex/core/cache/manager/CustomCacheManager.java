@@ -1,8 +1,6 @@
-package cc.before30.metricex.cacheex.config.cache;
+package cc.before30.metricex.cacheex.core.cache.manager;
 
-import cc.before30.metricex.cacheex.core.cache.CircuitCustomCacheWrapper;
-import io.github.resilience4j.bulkhead.Bulkhead;
-import io.github.resilience4j.circuitbreaker.CircuitBreaker;
+import cc.before30.metricex.cacheex.core.cache.CustomCacheWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -12,23 +10,22 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * CircuitCacheManager
+ * Resilience4jCacheManager
  *
  * @author before30
- * @since 2020/07/18
+ * @since 2020/07/17
  */
 @RequiredArgsConstructor
-public class CircuitCacheManager implements CacheManager {
+public class CustomCacheManager implements CacheManager {
+
     private final CacheManager delegate;
     private final Map<String, Cache> cacheMap = new ConcurrentHashMap();
-    private final CircuitBreaker circuitBreaker;
-    private final Bulkhead bulkhead;
 
     @Override
     public Cache getCache(String name) {
         return cacheMap.computeIfAbsent(
                 name, key -> {
-                    CircuitCustomCacheWrapper cacheWrapper = new CircuitCustomCacheWrapper(delegate.getCache(key), circuitBreaker, bulkhead);
+                    CustomCacheWrapper cacheWrapper = new CustomCacheWrapper(delegate.getCache(key));
                     return cacheWrapper;
                 });
     }

@@ -1,4 +1,4 @@
-package cc.before30.metricex.cacheex.config.cache;
+package cc.before30.metricex.cacheex.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

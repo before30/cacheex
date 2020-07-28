@@ -1,6 +1,6 @@
 package cc.before30.metricex.cacheex;
 
-import cc.before30.metricex.cacheex.config.cache.CustomCacheProperties;
+import cc.before30.metricex.cacheex.config.CustomCacheProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
