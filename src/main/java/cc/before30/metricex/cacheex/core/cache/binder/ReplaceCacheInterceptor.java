@@ -1,6 +1,7 @@
 package cc.before30.metricex.cacheex.core.cache.binder;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
@@ -15,6 +16,8 @@ public class ReplaceCacheInterceptor implements BeanDefinitionRegistryPostProces
         registry.removeBeanDefinition("cacheInterceptor");
         GenericBeanDefinition def = new GenericBeanDefinition();
         def.setBeanClassName(CacheRegistryInterceptor.class.getName());
+        def.setPrimary(true);
+        def.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
         registry.registerBeanDefinition("cacheInterceptor", def);
     }
 
