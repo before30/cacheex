@@ -42,7 +42,7 @@ public class CacheRegistryInterceptor extends CacheInterceptor {
             registrar.bindCacheToRegistry(statsEnabled);
         }
 
-        return caches;
+        return statsEnabledList;
     }
 
     private CustomCacheWrapper toWrapper(Cache cache) {
