@@ -1,8 +1,6 @@
 package cc.before30.metricex.cacheex.config;
 
 import cc.before30.metricex.cacheex.core.cache.manager.CircuitCacheManager;
-import cc.before30.metricex.cacheex.core.cache.manager.CustomCacheManager;
-import cc.before30.metricex.cacheex.core.cache.metrics.CustomCacheMetricsBinderProvider;
 import io.github.resilience4j.bulkhead.Bulkhead;
 import io.github.resilience4j.bulkhead.BulkheadRegistry;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
@@ -59,14 +57,9 @@ public class RedisConfig extends CachingConfigurerSupport {
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .entryTtl(Duration.ofMinutes(10));
 
-        RedisCacheManager redisCacheManager = RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(redisConnectionFactory())
+        return  RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(redisConnectionFactory())
                 .cacheDefaults(defaultConfig)
                 .build();
-
-        CustomCacheManager cacheManager = new CustomCacheManager(redisCacheManager);
-        cacheProperties.getCacheNames().forEach(cacheManager::getCache);
-
-        return cacheManager;
     }
 
     @Bean
@@ -83,13 +76,6 @@ public class RedisConfig extends CachingConfigurerSupport {
         CircuitBreaker circuitBreaker = circuitBreakerRegistry.circuitBreaker("cache-circuit");
         Bulkhead bulkhead = bulkheadRegistry.bulkhead("cache-bulkhead");
 
-        CircuitCacheManager circuitCacheManager = new CircuitCacheManager(redisCacheManager, circuitBreaker, bulkhead);
-        circuitCacheManager.getCache("circuit_cache");
-        return circuitCacheManager;
-    }
-
-    @Bean
-    public CustomCacheMetricsBinderProvider customCacheMetricsBinderProvider() {
-        return new CustomCacheMetricsBinderProvider();
+        return new CircuitCacheManager(redisCacheManager, circuitBreaker, bulkhead);
     }
 }
